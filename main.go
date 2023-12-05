@@ -4,6 +4,7 @@ import (
 	"adventofcode2023/day01"
 	"adventofcode2023/day02"
 	"adventofcode2023/day03"
+	"adventofcode2023/day04"
 	"fmt"
 	"os"
 )
@@ -23,6 +24,10 @@ func main() {
 			fmt.Printf("Solution 2: %s\n", p2)
 		case "3":
 			p1, p2 := day03.Solve()
+			fmt.Printf("Solution 1: %s\n", p1)
+			fmt.Printf("Solution 2: %s\n", p2)
+		case "4":
+			p1, p2 := day04.Solve()
 			fmt.Printf("Solution 1: %s\n", p1)
 			fmt.Printf("Solution 2: %s\n", p2)
 		default:

@@ -1,4 +1,4 @@
-# DAY 1
+# DAY 1 🎄
 
 [https://adventofcode.com/2023/day/1](https://adventofcode.com/2023/day/1)
 
