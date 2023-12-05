@@ -15,8 +15,7 @@ type ScratchCard struct {
 	PlayedNumbers  []int64
 }
 
-func (sc *ScratchCard) GetValue() int64 {
-
+func (sc *ScratchCard) GetMatchingNumbers() []int64 {
 	matchedNums := []int64{}
 	for _, winningNum := range sc.WinningNumbers {
 		for _, playedNum := range sc.PlayedNumbers {
@@ -26,6 +25,12 @@ func (sc *ScratchCard) GetValue() int64 {
 			}
 		}
 	}
+	return matchedNums
+}
+
+func (sc *ScratchCard) GetPoints() int64 {
+
+	matchedNums := sc.GetMatchingNumbers()
 	var value int64 = 0
 	if len(matchedNums) > 0 {
 		value = int64(math.Pow(float64(2), float64(len(matchedNums))-1))
@@ -33,30 +38,24 @@ func (sc *ScratchCard) GetValue() int64 {
 	return value
 }
 
-func (sc *ScratchCard) GetWinnings() []int64 {
-	matchedNums := []int64{}
-	for _, winningNum := range sc.WinningNumbers {
-		for _, playedNum := range sc.PlayedNumbers {
-			if winningNum == playedNum {
-				matchedNums = append(matchedNums, winningNum)
-				break
-			}
+func (sc *ScratchCard) getWinningCopyIds() []int64 {
+	ids := []int64{}
+	matchedNums := sc.GetMatchingNumbers()
+	if len(matchedNums) > 0 {
+		for i := sc.CardId + 1; i <= (sc.CardId + int64(len(matchedNums))); i++ {
+			ids = append(ids, int64(i))
 		}
 	}
-
-	ids := []int64{}
-	for i := sc.CardId + 1; i <= (sc.CardId + int64(len(matchedNums))); i++ {
-		ids = append(ids, int64(i))
-	}
-
 	return ids
 }
 
 func parseInput(line string) ScratchCard {
 
 	c := strings.Split(line, ": ")
+
 	label := c[0]
 	cardid, _ := strconv.ParseInt(strings.Fields(label)[1], 10, 64)
+
 	nums := strings.Split(c[1], " | ")
 	scanner := bufio.NewScanner(strings.NewReader(nums[0]))
 	scanner.Split(bufio.ScanWords)
@@ -100,7 +99,7 @@ func PartOne() string {
 	var total int64 = 0
 	for _, line := range lines {
 		card := parseInput(line)
-		total += card.GetValue()
+		total += card.GetPoints()
 	}
 
 	return strconv.FormatInt(total, 10)
@@ -109,11 +108,12 @@ func PartOne() string {
 func PartTwo() string {
 	fr := utils.FileReader{Filepath: "./day04/input.txt"}
 	lines := fr.ReadLines()
+
 	totals := map[int64]int64{}
 	for i := 1; i <= len(lines); i++ {
 		card := parseInput(lines[i-1])
 		count := totals[card.CardId] + 1
-		ids := card.GetWinnings()
+		ids := card.getWinningCopyIds()
 		for _, id := range ids {
 			totals[id] = totals[id] + count
 		}
