@@ -35,7 +35,7 @@ func (x *FileReader) ReadLines() []string {
 	return lines
 }
 
-func (x *FileReader) ReadAll() string {
+func (x *FileReader) ReadText() string {
 
 	f, err := os.Open(x.Filepath)
 	if err != nil {
